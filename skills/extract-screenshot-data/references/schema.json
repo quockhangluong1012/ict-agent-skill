@@ -1,0 +1,214 @@
+{
+  "charts": [
+    {
+      "image_label": "",
+      "timeframe": "D1|H1|M5|unknown",
+      "symbol": "",
+      "exchange_or_broker": "",
+      "session_date": "",
+      "timezone_on_chart": "",
+      "chart_type": "candles|bars|heikin|renko|unknown",
+      "visible_price_high": null,
+      "visible_price_low": null,
+      "current_price": null,
+      "current_price_source": "candle_close|crosshair_readout|price_line|unknown"
+    }
+  ],
+  "htf_context": {
+    "derived_from_timeframe": "D1|H1|unknown",
+    "htf_bias": "bullish|bearish|neutral|unclear",
+    "bias_reasoning": "",
+    "dealing_range": {
+      "high": null,
+      "low": null,
+      "equilibrium": null
+    },
+    "premium_discount_state": "premium|discount|equilibrium|unclear",
+    "htf_pd_arrays_in_play": []
+  },
+  "market_structure": {
+    "current_state": "bullish|bearish|ranging|transition",
+    "swing_points": [
+      {
+        "type": "HH|HL|LH|LL",
+        "price": null,
+        "time_hint": "",
+        "timeframe": "D1|H1|M5|unknown"
+      }
+    ],
+    "bos": [
+      {
+        "direction": "bullish|bearish",
+        "level": null,
+        "time_hint": "",
+        "confirmed_by_body_close": true,
+        "timeframe": "D1|H1|M5|unknown"
+      }
+    ],
+    "mss": [
+      {
+        "direction": "bullish|bearish",
+        "level": null,
+        "time_hint": "",
+        "notes": "",
+        "timeframe": "D1|H1|M5|unknown"
+      }
+    ],
+    "cisd": [
+      {
+        "direction": "bullish|bearish",
+        "level": null,
+        "time_hint": "",
+        "timeframe": "D1|H1|M5|unknown"
+      }
+    ],
+    "displacement": {
+      "present": false,
+      "direction": "bullish|bearish|none",
+      "leg_start": null,
+      "leg_end": null,
+      "energy_notes": "",
+      "timeframe": "D1|H1|M5|unknown"
+    }
+  },
+  "liquidity": {
+    "buyside": [
+      {
+        "label": "",
+        "price": null,
+        "type": "PDH|PWH|equal_highs|swing_high|session_high|other",
+        "swept": false,
+        "sweep_time_hint": "",
+        "timeframe": "D1|H1|M5|unknown"
+      }
+    ],
+    "sellside": [
+      {
+        "label": "",
+        "price": null,
+        "type": "PDL|PWL|equal_lows|swing_low|session_low|other",
+        "swept": false,
+        "sweep_time_hint": "",
+        "timeframe": "D1|H1|M5|unknown"
+      }
+    ],
+    "liquidity_voids": [
+      {
+        "high": null,
+        "low": null,
+        "notes": "",
+        "timeframe": "D1|H1|M5|unknown"
+      }
+    ],
+    "stop_runs": [
+      {
+        "direction": "buyside|sellside",
+        "level": null,
+        "notes": "",
+        "timeframe": "D1|H1|M5|unknown"
+      }
+    ]
+  },
+  "pd_arrays": {
+    "fvg": [
+      {
+        "type": "bullish|bearish",
+        "high": null,
+        "low": null,
+        "consequent_encroachment": null,
+        "timeframe": "D1|H1|M5|unknown",
+        "status": "intact|partially_mitigated|mitigated|inverted"
+      }
+    ],
+    "order_blocks": [
+      {
+        "type": "bullish|bearish",
+        "high": null,
+        "low": null,
+        "origin_time_hint": "",
+        "timeframe": "D1|H1|M5|unknown",
+        "status": "unmitigated|mitigated"
+      }
+    ],
+    "breaker_blocks": [],
+    "mitigation_blocks": [],
+    "rejection_blocks": [],
+    "bpr": [],
+    "inversion_fvg": [],
+    "opening_gaps": [
+      {
+        "kind": "NDOG|NWOG|ORG",
+        "high": null,
+        "low": null,
+        "timeframe": "D1|H1|M5|unknown"
+      }
+    ]
+  },
+  "ote": {
+    "applicable": false,
+    "impulse_leg": {
+      "start": null,
+      "end": null,
+      "direction": "bullish|bearish",
+      "timeframe": "D1|H1|M5|unknown"
+    },
+    "fib_levels": {
+      "0.5": null,
+      "0.62": null,
+      "0.705": null,
+      "0.79": null
+    },
+    "price_in_ote": false
+  },
+  "time_and_price": {
+    "killzone": "asia|london|ny_am|silver_bullet|ny_lunch|ny_pm|outside_killzone|unknown",
+    "macro_windows": [],
+    "power_of_three": {
+      "accumulation": "",
+      "manipulation": "",
+      "distribution": ""
+    },
+    "judas_swing": {
+      "present": false,
+      "direction": "up|down|none",
+      "notes": ""
+    },
+    "session_levels": []
+  },
+  "smt_divergence": {
+    "checked": false,
+    "correlated_instrument": "",
+    "divergence_type": "bullish|bearish|none",
+    "confirmed": false,
+    "notes": ""
+  },
+  "ict_2022_model_checklist": {
+    "htf_pd_array_aligned": false,
+    "liquidity_sweep_confirmed": false,
+    "displacement_present": false,
+    "fvg_created_by_displacement": false,
+    "mss_or_cisd_confirmed": false,
+    "entry_inside_fvg_or_ote": false,
+    "inside_valid_killzone": false,
+    "target_liquidity_identified": false
+  },
+  "annotations": [
+    {
+      "id": "",
+      "kind": "fvg|ob|liquidity|mss|ote|entry|stop|target|note",
+      "label": "",
+      "price_high": null,
+      "price_low": null,
+      "time_hint": "",
+      "importance": "high|medium|low",
+      "timeframe": "D1|H1|M5|unknown"
+    }
+  ],
+  "confidence": {
+    "overall": 0,
+    "readability_of_image": "high|medium|low",
+    "ambiguities": [],
+    "missing_timeframes": []
+  },
+  "raw_observations": []
+}
