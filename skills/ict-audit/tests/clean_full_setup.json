@@ -1,0 +1,30 @@
+{
+  "charts": [
+    {"image_label": "gu_d1.png", "timeframe": "D1", "symbol": "GBPUSD", "current_price": 1.2640, "current_price_source": "candle_close"},
+    {"image_label": "gu_h1.png", "timeframe": "H1", "symbol": "GBPUSD", "current_price": 1.2640, "current_price_source": "candle_close"},
+    {"image_label": "gu_m5.png", "timeframe": "M5", "symbol": "GBPUSD", "current_price": 1.2640, "current_price_source": "candle_close"}
+  ],
+  "htf_context": {"derived_from_timeframe": "D1", "htf_bias": "bearish", "bias_reasoning": "premium reaching for D1 bearish FVG",
+    "dealing_range": {"high": 1.2800, "low": 1.2400, "equilibrium": 1.2600}, "premium_discount_state": "premium",
+    "htf_pd_arrays_in_play": [{"type": "fvg", "note": "D1 bearish FVG 1.2610-1.2660"}]},
+  "market_structure": {"current_state": "bearish",
+    "swing_points": [{"type": "LH", "price": 1.2650, "timeframe": "M5"}],
+    "bos": [],
+    "mss": [{"direction": "bearish", "level": 1.2605, "notes": "body close below M5 swing low", "timeframe": "M5"}],
+    "cisd": [],
+    "displacement": {"present": true, "direction": "bearish", "leg_start": 1.2660, "leg_end": 1.2600, "timeframe": "M5"}},
+  "liquidity": {"buyside": [{"label": "session high", "price": 1.2655, "type": "session_high", "swept": true, "timeframe": "M5"}],
+    "sellside": [{"label": "PDL", "price": 1.2500, "type": "PDL", "swept": false, "timeframe": "D1"}],
+    "liquidity_voids": [], "stop_runs": []},
+  "pd_arrays": {"fvg": [{"type": "bearish", "high": 1.2635, "low": 1.2615, "consequent_encroachment": 1.2625, "timeframe": "M5", "status": "intact"}],
+    "order_blocks": [], "breaker_blocks": [], "opening_gaps": []},
+  "ote": {"applicable": true, "impulse_leg": {"start": 1.2660, "end": 1.2600, "direction": "bearish", "timeframe": "M5"},
+    "fib_levels": {"0.5": 1.2630, "0.62": 1.26372, "0.705": 1.26423, "0.79": 1.26474}, "price_in_ote": true},
+  "time_and_price": {"killzone": "ny_am", "macro_windows": []},
+  "smt_divergence": {"checked": true, "confirmed": false, "divergence_type": "none"},
+  "ict_2022_model_checklist": {"htf_pd_array_aligned": true, "liquidity_sweep_confirmed": true, "displacement_present": true,
+    "fvg_created_by_displacement": true, "mss_or_cisd_confirmed": true, "entry_inside_fvg_or_ote": true,
+    "inside_valid_killzone": true, "target_liquidity_identified": true},
+  "confidence": {"overall": 0.85, "readability_of_image": "high", "missing_timeframes": [], "ambiguities": []},
+  "raw_observations": ["D1 premium", "M5 sweep of session high then displacement down"]
+}

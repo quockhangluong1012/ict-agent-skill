@@ -1,0 +1,15 @@
+{
+  "charts": [{"image_label": "x_h1.png", "timeframe": "H1", "symbol": "XAUUSD", "current_price": 2380.0}],
+  "htf_context": {"derived_from_timeframe": "H1", "htf_bias": "bullish", "dealing_range": {"high": 2400, "low": 2360, "equilibrium": 2380}, "premium_discount_state": "unclear"},
+  "market_structure": {"current_state": "ranging", "swing_points": [], "bos": [], "mss": [], "cisd": [],
+    "displacement": {"present": false, "direction": "none", "leg_start": null, "leg_end": null}},
+  "liquidity": {"buyside": [{"label": "PDH", "price": 2395, "type": "PDH", "swept": false}], "sellside": [], "liquidity_voids": [], "stop_runs": []},
+  "pd_arrays": {"fvg": [], "order_blocks": [], "breaker_blocks": []},
+  "ote": {"applicable": false, "impulse_leg": {"start": null, "end": null}, "fib_levels": {}, "price_in_ote": false},
+  "time_and_price": {"killzone": "unknown", "macro_windows": []},
+  "smt_divergence": {"checked": false},
+  "ict_2022_model_checklist": {"htf_pd_array_aligned": true, "liquidity_sweep_confirmed": true, "displacement_present": true,
+    "fvg_created_by_displacement": true, "mss_or_cisd_confirmed": true, "entry_inside_fvg_or_ote": true,
+    "inside_valid_killzone": true, "target_liquidity_identified": false},
+  "confidence": {"overall": 0.3, "readability_of_image": "low", "missing_timeframes": ["D1", "M5"], "ambiguities": ["mostly unreadable"]}
+}

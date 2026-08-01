@@ -1,0 +1,25 @@
+{
+  "charts": [
+    {"image_label": "eurusd_d1.png", "timeframe": "D1", "symbol": "EURUSD", "current_price": 1.0960, "current_price_source": "candle_close", "visible_price_high": 1.1020, "visible_price_low": 1.0780},
+    {"image_label": "eurusd_h1.png", "timeframe": "H1", "symbol": "EURUSD", "current_price": 1.0960, "current_price_source": "price_line"}
+  ],
+  "htf_context": {"derived_from_timeframe": "D1", "htf_bias": "bullish", "bias_reasoning": "above prior consolidation",
+    "dealing_range": {"high": 1.1000, "low": 1.0800, "equilibrium": 1.0900}, "premium_discount_state": "discount", "htf_pd_arrays_in_play": []},
+  "market_structure": {"current_state": "bullish",
+    "swing_points": [{"type": "HH", "price": 1.0980, "timeframe": "H1"}],
+    "bos": [{"direction": "bullish", "level": 1.0955, "confirmed_by_body_close": false, "timeframe": "H1"}],
+    "mss": [], "cisd": [],
+    "displacement": {"present": false, "direction": "none", "leg_start": null, "leg_end": null, "timeframe": "unknown"}},
+  "liquidity": {"buyside": [{"label": "PDH", "price": 1.0950, "type": "PDH", "swept": true, "timeframe": "D1"}],
+    "sellside": [{"label": "PDL", "price": 1.0820, "type": "PDL", "swept": false, "timeframe": "D1"}],
+    "liquidity_voids": [], "stop_runs": []},
+  "pd_arrays": {"fvg": [], "order_blocks": [], "breaker_blocks": [], "opening_gaps": []},
+  "ote": {"applicable": false, "impulse_leg": {"start": null, "end": null}, "fib_levels": {"0.5": null, "0.62": null, "0.705": null, "0.79": null}, "price_in_ote": false},
+  "time_and_price": {"killzone": "unknown", "macro_windows": []},
+  "smt_divergence": {"checked": false, "confirmed": false, "divergence_type": "none"},
+  "ict_2022_model_checklist": {"htf_pd_array_aligned": true, "liquidity_sweep_confirmed": true, "displacement_present": false,
+    "fvg_created_by_displacement": false, "mss_or_cisd_confirmed": false, "entry_inside_fvg_or_ote": false,
+    "inside_valid_killzone": false, "target_liquidity_identified": true},
+  "confidence": {"overall": 0.55, "readability_of_image": "medium", "missing_timeframes": ["M5"], "ambiguities": ["no displacement leg visible"]},
+  "raw_observations": ["D1 bullish candles", "H1 wick above 1.0955"]
+}
