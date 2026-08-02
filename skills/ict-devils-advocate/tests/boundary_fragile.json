@@ -1,0 +1,14 @@
+{
+  "_fixture": "Nothing here is wrong — the label matches the arithmetic, so 0 contradictions. What --sensitivity exposes is that the conclusion survives a 3.9% move of one boundary and no further, and that an adjacent external swing high visible on the same chart reverses it outright. Fragility is not an error; it is the evidence that the boundary choice, not the market, is producing the label.",
+  "instrument": "NDX",
+  "direction": "long",
+  "dealing_range": {
+    "high": 21800.0,
+    "low": 21100.0,
+    "claimed_state": "premium",
+    "alternatives": [
+      { "label": "next external swing high up", "high": 22200.0, "low": 21100.0 }
+    ]
+  },
+  "current_price": 21500.0
+}

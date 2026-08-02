@@ -1,0 +1,12 @@
+{
+  "_fixture": "The highest-yield objection in the whole model, reduced to arithmetic: price sits at 74.3% of the range the analysis itself drew, and the analysis calls it discount. Expect PD-STATE contradiction plus the SIDE-OF-RANGE flag.",
+  "instrument": "NDX",
+  "direction": "long",
+  "dealing_range": {
+    "high": 21800.0,
+    "low": 21100.0,
+    "claimed_equilibrium": 21450.0,
+    "claimed_state": "discount"
+  },
+  "current_price": 21620.0
+}

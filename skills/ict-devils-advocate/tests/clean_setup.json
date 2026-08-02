@@ -1,0 +1,27 @@
+{
+  "_fixture": "Everything internally consistent. The load-bearing test: this must produce ZERO contradictions. A checker that false-positives here is worse than no checker, because the skill ships its output as [ARITHMETIC] — the one tier the user is told not to argue with.",
+  "instrument": "NDX",
+  "direction": "long",
+  "dealing_range": {
+    "high": 21800.0,
+    "low": 21100.0,
+    "claimed_equilibrium": 21450.0,
+    "claimed_state": "discount"
+  },
+  "current_price": 21300.0,
+  "impulse_leg": { "start": 21100.0, "end": 21800.0 },
+  "fvg": [
+    { "label": "H1 bullish FVG", "high": 21320.0, "low": 21280.0, "claimed_ce": 21300.0 }
+  ],
+  "annotations": [
+    { "label": "H1 FVG box", "drawn_high": 21320.0, "drawn_low": 21280.0,
+      "candle_high": 21320.0, "candle_low": 21280.0 }
+  ],
+  "dol": { "label": "PDH", "price": 21800.0, "claimed_untaken": true, "already_swept": false },
+  "trade": { "entry": 21300.0, "stop": 21240.0, "target": 21800.0, "claimed_rr": 8.33 },
+  "account": {
+    "balance": 10000.0, "risk_pct": 1.0, "value_per_point": 1.0,
+    "claimed_position_size": 1.6667,
+    "daily_loss_limit_pct": 5.0, "max_drawdown_pct": 10.0
+  }
+}

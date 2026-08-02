@@ -5,16 +5,26 @@ check_arithmetic.py — mechanical contradiction finder for a trader's own state
 This does NOT judge whether an ICT reading of a chart is correct. It only catches the
 class of error that is decidable from the numbers alone: a label that disagrees with the
 arithmetic behind it, a level that doesn't recompute, an R multiple that isn't what was
-claimed. Those objections are valuable precisely because they are not matters of opinion.
+claimed, a drawn box that doesn't match the candles it was drawn around, a win rate whose
+confidence interval swallows the claim being made from it. Those objections are valuable
+precisely because they are not matters of opinion.
 
 Extract whatever numbers the user's analysis actually asserted into a claims JSON and run
 this before arguing about interpretation. Omit any block the analysis didn't state — the
-checker skips what it isn't given rather than assuming values.
+checker skips what it isn't given rather than assuming values. It never invents a level,
+a swing, or a candle.
 
 Usage:
     python3 check_arithmetic.py claims.json
+    python3 check_arithmetic.py claims.json --sensitivity
     cat claims.json | python3 check_arithmetic.py -
     python3 check_arithmetic.py --schema
+
+Options:
+    --sensitivity   Report how far each dealing-range boundary would have to move to flip
+                    the premium/discount conclusion, and evaluate any alternative boundary
+                    pairs supplied in dealing_range.alternatives. This turns "the
+                    boundaries were chosen, not derived" from an assertion into a number.
 
 Exit codes:
     0  no contradictions found
@@ -23,6 +33,7 @@ Exit codes:
 """
 
 import json
+import math
 import sys
 
 SCHEMA = {
@@ -34,6 +45,10 @@ SCHEMA = {
         "low": 21100.0,
         "claimed_equilibrium": 21450.0,
         "claimed_state": "premium | discount | equilibrium",
+        "_alternatives": "optional; boundary pairs you can actually see on the chart",
+        "alternatives": [
+            {"label": "next external swing high up", "high": 21980.0, "low": 21100.0}
+        ],
     },
     "current_price": 21620.0,
     "impulse_leg": {
@@ -49,24 +64,58 @@ SCHEMA = {
             "claimed_ce": 21470.0,
         }
     ],
+    "annotations": [
+        {
+            "_comment": "drawn_* is what the user's box says; candle_* is what you measured "
+                        "off the three candles. Both required for the drift check.",
+            "label": "H1 FVG box",
+            "drawn_high": 21640.0,
+            "drawn_low": 21600.0,
+            "candle_high": 21638.0,
+            "candle_low": 21602.0,
+        }
+    ],
+    "dol": {
+        "label": "PDH",
+        "price": 21800.0,
+        "claimed_untaken": True,
+        "already_swept": False,
+        "sweep_note": "e.g. wick to 21,832 two sessions prior, close 21,741",
+    },
     "trade": {
         "entry": 21470.0,
         "stop": 21400.0,
         "target": 21800.0,
         "claimed_rr": 4.0,
+        "spread_points": 0.0,
+        "slippage_points": 0.0,
     },
     "account": {
         "balance": 10000.0,
         "risk_pct": 1.0,
         "value_per_point": 1.0,
         "claimed_position_size": 1.4,
+        "daily_loss_limit_pct": 5.0,
+        "max_drawdown_pct": 10.0,
+    },
+    "backtest": {
+        "_comment": "for BACKTEST mode; distinct_* are the real sample size",
+        "setups": 20,
+        "wins": 12,
+        "claimed_win_rate_pct": 60.0,
+        "distinct_days": 7,
+        "distinct_htf_legs": 4,
+        "instruments": ["NDX"],
     },
 }
 
-# Matches the premium/discount convention used by the extract-screenshot-data validator,
-# so the two tools never disagree with each other on the same numbers.
+# Matches the premium/discount convention used by the extract-screenshot-data validator
+# and by ict-audit's check_facts.py, so the three tools never disagree on the same numbers.
 DISCOUNT_MAX = 0.45
 PREMIUM_MIN = 0.55
+FIB_RATIOS = ("0.5", "0.62", "0.705", "0.79")
+OTE_LO, OTE_HI = 0.62, 0.79
+Z95 = 1.959964
 
 findings = []
 
@@ -109,7 +158,18 @@ def fib_level(start, end, ratio):
     return end - ratio * (end - start)
 
 
-def check_dealing_range(claims):
+def wilson(wins, n, z=Z95):
+    """Wilson score interval — behaves sanely at the small n this domain actually has."""
+    if n <= 0:
+        return None, None
+    p = wins / n
+    denom = 1 + z * z / n
+    centre = (p + z * z / (2 * n)) / denom
+    half = z / denom * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n))
+    return max(0.0, centre - half), min(1.0, centre + half)
+
+
+def check_dealing_range(claims, sensitivity=False):
     dr = claims.get("dealing_range") or {}
     high, low = dr.get("high"), dr.get("low")
     if not (num(high) and num(low)):
@@ -159,6 +219,87 @@ def check_dealing_range(claims):
                 "short taken from discount. Same objection in mirror: state the continuation case "
                 "explicitly rather than leaving the range argument unaddressed.")
 
+        if sensitivity:
+            _boundary_sensitivity(price, low, high, state)
+
+    if sensitivity:
+        _alternative_boundaries(claims, dr, low, high)
+
+
+def _boundary_sensitivity(price, low, high, state):
+    """How far does a boundary have to move to change the conclusion?
+
+    Nothing is invented here: this reports the distance to the nearest boundary value that
+    would flip the label, which is a property of the numbers the analysis already stated.
+    A small distance means the premium/discount conclusion is a choice, not a measurement.
+    """
+    span = high - low
+    targets = [t for t in (DISCOUNT_MAX, PREMIUM_MIN)]
+    moves = []
+    for t in targets:
+        # move the high, holding the low
+        new_high = low + (price - low) / t
+        if new_high > price:
+            moves.append(("high", new_high, new_high - high, t))
+        # move the low, holding the high
+        if abs(1 - t) > 1e-12:
+            new_low = (price - t * high) / (1 - t)
+            if new_low < price:
+                moves.append(("low", new_low, new_low - low, t))
+
+    if not moves:
+        add("INFO", "PD-SENSITIVITY", "no boundary move produces a different label.")
+        return
+
+    for which, new_val, delta, t in moves:
+        band = "discount" if t == DISCOUNT_MAX else "premium"
+        edge = "into" if band != state else "out of"
+        pct = abs(delta) / span * 100
+        add("INFO", "PD-SENSITIVITY",
+            f"moving the {which} from {fmt(low if which == 'low' else high)} to {fmt(new_val)} "
+            f"({'+' if delta > 0 else ''}{fmt(delta)}, {pct:.1f}% of the current span) puts price "
+            f"exactly on the {band} boundary — i.e. that move takes the read {edge} {band}.")
+
+    nearest = min(moves, key=lambda m: abs(m[2]))
+    pct = abs(nearest[2]) / span * 100
+    if pct <= 10:
+        add("FLAG", "PD-FRAGILE",
+            f"the premium/discount conclusion flips on a {pct:.1f}% move of one boundary "
+            f"({fmt(abs(nearest[2]))} points on the {nearest[0]}). At that fragility the label is "
+            "reporting the boundary choice, not the market. Ask which two swings define the range "
+            "and why those two — the answer has to be independent of where it puts price.")
+
+
+def _alternative_boundaries(claims, dr, low, high):
+    alts = dr.get("alternatives") or []
+    price = claims.get("current_price")
+    claimed_state = (dr.get("claimed_state") or "").strip().lower()
+    base_state, _ = classify_pd(price, low, high) if num(price) else (None, None)
+    if not alts:
+        add("INFO", "PD-ALT",
+            "no alternative boundary pairs supplied. If the chart shows an adjacent external swing, "
+            "add it to dealing_range.alternatives — a nearby alternative that flips the conclusion "
+            "is the strongest available evidence that the boundaries were chosen rather than derived.")
+        return
+    for i, alt in enumerate(alts):
+        label = alt.get("label") or f"alternatives[{i}]"
+        a_high, a_low = alt.get("high", high), alt.get("low", low)
+        if not (num(a_high) and num(a_low)) or a_high <= a_low:
+            add("FLAG", "PD-ALT", f"{label}: unusable boundary pair, skipped.")
+            continue
+        if not num(price):
+            continue
+        state, frac = classify_pd(price, a_low, a_high)
+        flipped = base_state is not None and state != base_state
+        level = "FLAG" if flipped else "INFO"
+        add(level, "PD-ALT",
+            f"{label} ({fmt(a_low)}–{fmt(a_high)}): price sits at {frac * 100:.1f}% → {state}"
+            + (f", which REVERSES the stated {claimed_state or base_state}. The read's side-of-range "
+               "argument depends entirely on which of these two swing pairs is the operative range, "
+               "and the analysis has not defended that choice."
+               if flipped else " — same conclusion as the stated range, so the boundary choice is not "
+                               "doing the work here."))
+
 
 def check_fib(claims):
     leg = claims.get("impulse_leg") or {}
@@ -181,7 +322,7 @@ def check_fib(claims):
                 "usually means the wrong swing pair was chosen.")
 
     claimed = (leg.get("claimed_fib") or {})
-    for ratio_str in ("0.5", "0.62", "0.705", "0.79"):
+    for ratio_str in FIB_RATIOS:
         ratio = float(ratio_str)
         computed = fib_level(start, end, ratio)
         c = claimed.get(ratio_str)
@@ -196,7 +337,7 @@ def check_fib(claims):
         else:
             add("INFO", f"FIB-{ratio_str}", f"{ratio_str} of the stated leg = {fmt(computed)}.")
 
-    ote_a, ote_b = fib_level(start, end, 0.62), fib_level(start, end, 0.79)
+    ote_a, ote_b = fib_level(start, end, OTE_LO), fib_level(start, end, OTE_HI)
     lo, hi = min(ote_a, ote_b), max(ote_a, ote_b)
     trade = claims.get("trade") or {}
     entry = trade.get("entry")
@@ -250,6 +391,73 @@ def check_fvg(claims):
                     "An 'entered at the FVG' claim does not hold for this gap.")
 
 
+def check_annotations(claims):
+    """Drawn box versus the candles it was drawn around.
+
+    Every downstream number — CE, OTE band membership, R multiple — is measured off the box
+    rather than off the candles, so a box drawn wide is a silent arithmetic error running
+    through the whole analysis. Nobody re-measures their own boxes, which is exactly why
+    this check lands.
+    """
+    for i, ann in enumerate(claims.get("annotations") or []):
+        label = ann.get("label") or f"annotations[{i}]"
+        dh, dl = ann.get("drawn_high"), ann.get("drawn_low")
+        ch, cl = ann.get("candle_high"), ann.get("candle_low")
+        if not all(num(v) for v in (dh, dl, ch, cl)):
+            continue
+        if ch <= cl or dh <= dl:
+            add("FLAG", "ANN-DEGENERATE", f"{label}: inverted or zero-height box, skipped.")
+            continue
+        true_span = ch - cl
+        d_high, d_low = dh - ch, dl - cl
+        drawn_ce, true_ce = (dh + dl) / 2.0, (ch + cl) / 2.0
+        if close(dh, ch, true_span) and close(dl, cl, true_span):
+            add("OK", "ANN-DRIFT", f"{label}: drawn box matches the candle extremes.")
+            continue
+        add("CONTRADICTION", "ANN-DRIFT",
+            f"{label}: the drawn box is {fmt(dl)}–{fmt(dh)} but the candles give "
+            f"{fmt(cl)}–{fmt(ch)} (top off by {fmt(d_high)}, bottom off by {fmt(d_low)}; the box is "
+            f"{abs(dh - dl) / true_span * 100:.1f}% of the true height). Claimed CE {fmt(drawn_ce)} "
+            f"vs true CE {fmt(true_ce)}. Every level measured off this box inherits the error.")
+
+        entry = (claims.get("trade") or {}).get("entry")
+        if num(entry):
+            in_drawn, in_true = dl <= entry <= dh, cl <= entry <= ch
+            if in_drawn != in_true:
+                add("CONTRADICTION", "ANN-ENTRY-FLIP",
+                    f"{label}: entry {fmt(entry)} is "
+                    f"{'inside the drawn box but OUTSIDE' if in_drawn else 'outside the drawn box but INSIDE'}"
+                    " the actual gap. The 'entered at the FVG' claim is decided entirely by the "
+                    "drawing error.")
+
+
+def check_dol(claims):
+    dol = claims.get("dol") or {}
+    if not dol:
+        return
+    label = dol.get("label") or "DOL"
+    price = dol.get("price")
+    swept = bool(dol.get("already_swept"))
+    untaken = dol.get("claimed_untaken")
+    note = dol.get("sweep_note") or ""
+    if swept and untaken:
+        add("CONTRADICTION", "DOL-SWEPT",
+            f"{label} at {fmt(price)} is asserted as untaken liquidity and also recorded as already "
+            f"swept{(' — ' + note) if note else ''}. Both cannot hold. If it was swept, step 8 has no "
+            "draw and the reward side of the setup is measured against a level that is no longer a "
+            "pool.")
+    elif swept:
+        add("FLAG", "DOL-SWEPT",
+            f"{label} at {fmt(price)} was already swept{(' — ' + note) if note else ''}. The target "
+            "is not resting liquidity; say what the draw is instead.")
+
+    target = (claims.get("trade") or {}).get("target")
+    if num(price) and num(target) and not close(price, target, max(abs(price), 1.0)):
+        add("FLAG", "DOL-TARGET-MISMATCH",
+            f"stated target {fmt(target)} is not the stated DOL {fmt(price)}. Two different levels "
+            "are in play; the R figure and the narrative are describing different trades.")
+
+
 def check_trade(claims):
     trade = claims.get("trade") or {}
     entry, stop, target = trade.get("entry"), trade.get("stop"), trade.get("target")
@@ -296,6 +504,20 @@ def check_trade(claims):
                     "rounding is harmless, but confirm the target used for the claim is the same "
                     "target stated here — a mismatch usually means two different targets are in play.")
 
+        cost = 0.0
+        for key in ("spread_points", "slippage_points"):
+            v = trade.get(key)
+            if num(v) and v > 0:
+                cost += v
+        if cost > 0:
+            rr_net = (reward - cost) / (risk + cost)
+            degrade = (rr - rr_net) / rr * 100 if rr else 0.0
+            level = "FLAG" if degrade >= 15 else "INFO"
+            add(level, "RR-NET",
+                f"with {fmt(cost)} points of spread+slippage, the R multiple is 1:{rr_net:.2f} "
+                f"rather than 1:{rr:.2f} ({degrade:.0f}% worse). A backtested R assumes fills at "
+                "the tick and is an upper bound; if the plan needs the upper bound it has no margin.")
+
 
 def check_risk(claims):
     acct = claims.get("account") or {}
@@ -312,6 +534,18 @@ def check_risk(claims):
             "daily-loss and overall-drawdown allowance, not the balance — count how many "
             "consecutive losses this survives and whether that number is realistic for a "
             "discretionary sequence.")
+
+    for key, name in (("daily_loss_limit_pct", "daily loss limit"),
+                      ("max_drawdown_pct", "overall drawdown allowance")):
+        lim = acct.get(key)
+        if num(lim) and lim > 0 and risk_pct > 0:
+            n = lim / risk_pct
+            level = "FLAG" if n < 4 else "INFO"
+            add(level, "DD-HEADROOM",
+                f"{name} {lim:g}% ÷ {risk_pct:g}% per trade = {n:.1f} losing trades to breach. "
+                + ("Discretionary losses cluster, so a run that short is the normal case rather "
+                   "than the tail." if n < 4 else "State whether a losing streak of that length is "
+                   "inside what the sample has already produced."))
 
     trade = claims.get("trade") or {}
     entry, stop = trade.get("entry"), trade.get("stop")
@@ -335,8 +569,58 @@ def check_risk(claims):
                         f"({implied_risk / balance * 100:.2f}% of balance), not {risk_pct:g}%.")
 
 
+def check_backtest(claims):
+    bt = claims.get("backtest") or {}
+    n, wins = bt.get("setups"), bt.get("wins")
+    if not (num(n) and num(wins)):
+        return
+    n, wins = int(n), int(wins)
+    if n <= 0 or wins < 0 or wins > n:
+        add("CONTRADICTION", "BT-COUNTS",
+            f"setups={n}, wins={wins} is not a possible tally.")
+        return
+    p = wins / n
+    lo, hi = wilson(wins, n)
+    add("INFO", "BT-RATE",
+        f"{wins}/{n} = {p * 100:.1f}%; 95% Wilson interval {lo * 100:.1f}%–{hi * 100:.1f}%.")
+
+    claimed = bt.get("claimed_win_rate_pct")
+    if num(claimed) and abs(claimed / 100.0 - p) > 0.005:
+        add("CONTRADICTION", "BT-RATE-CLAIM",
+            f"claimed win rate {claimed:g}% does not match {wins}/{n} = {p * 100:.1f}%.")
+
+    interval = f"{wins}/{n} = {p * 100:.1f}%, 95% interval {lo * 100:.1f}%–{hi * 100:.1f}%"
+    if lo <= 0.5 <= hi:
+        add("FLAG", "BT-INTERVAL",
+            f"{interval} — the interval contains 50%. This sample is compatible with a coin flip and "
+            "with a real edge simultaneously, so it cannot support a conclusion about whether the "
+            "edge exists. Any claim resting on the point estimate is a [METHOD] failure regardless "
+            "of how carefully each individual setup was read.")
+    elif hi - lo > 0.30:
+        add("FLAG", "BT-INTERVAL",
+            f"{interval} — a span of {(hi - lo) * 100:.0f} percentage points. The point estimate is "
+            "far more precise-looking than the sample warrants; quote the interval, not the number.")
+
+    for key, label in (("distinct_days", "distinct days"),
+                       ("distinct_htf_legs", "distinct HTF legs")):
+        v = bt.get(key)
+        if num(v) and v > 0 and v < n:
+            eff_lo, eff_hi = wilson(round(p * v), int(v))
+            add("FLAG", "BT-INDEPENDENCE",
+                f"{n} setups but only {int(v)} {label}. Setups sharing a day or an HTF leg are not "
+                f"independent draws, so the effective sample size is nearer {int(v)} than {n}. At "
+                f"n={int(v)} the same win rate carries a 95% interval of "
+                f"{eff_lo * 100:.1f}%–{eff_hi * 100:.1f}%.")
+
+    instruments = bt.get("instruments")
+    if isinstance(instruments, list) and len(instruments) == 1 and n >= 10:
+        add("FLAG", "BT-REGIME",
+            f"all {n} setups come from {instruments[0]}. One instrument over one period is one "
+            "regime; the result may be a fact about that regime rather than about the model.")
+
+
 def main():
-    args = sys.argv[1:]
+    args = [a for a in sys.argv[1:]]
     if not args or args[0] in ("-h", "--help"):
         print(__doc__)
         return 0
@@ -344,11 +628,18 @@ def main():
         print(json.dumps(SCHEMA, indent=2))
         return 0
 
+    sensitivity = "--sensitivity" in args
+    positional = [a for a in args if not a.startswith("--")]
+    if not positional:
+        print("ERROR: no input file given (use '-' for stdin).", file=sys.stderr)
+        return 2
+    src = positional[0]
+
     try:
-        raw = sys.stdin.read() if args[0] == "-" else open(args[0], encoding="utf-8").read()
+        raw = sys.stdin.read() if src == "-" else open(src, encoding="utf-8").read()
         claims = json.loads(raw)
     except FileNotFoundError:
-        print(f"ERROR: no such file: {args[0]}", file=sys.stderr)
+        print(f"ERROR: no such file: {src}", file=sys.stderr)
         return 2
     except json.JSONDecodeError as e:
         print(f"ERROR: input is not valid JSON: {e}", file=sys.stderr)
@@ -357,11 +648,22 @@ def main():
         print("ERROR: top level must be a JSON object, not an array or scalar.", file=sys.stderr)
         return 2
 
-    for fn in (check_dealing_range, check_fib, check_fvg, check_trade, check_risk):
+    checks = [
+        lambda c: check_dealing_range(c, sensitivity),
+        check_fib,
+        check_fvg,
+        check_annotations,
+        check_dol,
+        check_trade,
+        check_risk,
+        check_backtest,
+    ]
+    for fn in checks:
+        name = getattr(fn, "__name__", "check_dealing_range")
         try:
             fn(claims)
         except Exception as e:  # a malformed block shouldn't silently skip the other checks
-            add("FLAG", "CHECK-ERROR", f"{fn.__name__} could not run: {e}")
+            add("FLAG", "CHECK-ERROR", f"{name} could not run: {e}")
 
     order = {"CONTRADICTION": 0, "FLAG": 1, "OK": 2, "INFO": 3}
     findings.sort(key=lambda f: order.get(f[0], 9))
@@ -378,6 +680,8 @@ def main():
     if n_contra:
         print("Contradictions are [ARITHMETIC] objections: the analysis disagrees with its own "
               "numbers, which is not a matter of interpretation.")
+    print("Flags are leads, not findings: each one still needs a [CHART] or [DOCTRINE] argument "
+          "before it can be shipped as an objection.")
     return 1 if n_contra else 0
 
 

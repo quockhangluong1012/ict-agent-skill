@@ -1,0 +1,13 @@
+{
+  "_fixture": "The target is asserted as untaken liquidity and recorded as already swept. Both cannot hold; if it was swept, step 8 has no draw.",
+  "instrument": "NDX",
+  "direction": "long",
+  "dol": {
+    "label": "PDH",
+    "price": 21800.0,
+    "claimed_untaken": true,
+    "already_swept": true,
+    "sweep_note": "wick to 21,832 two sessions prior, candle closed 21,741"
+  },
+  "trade": { "entry": 21620.0, "stop": 21570.0, "target": 21800.0 }
+}

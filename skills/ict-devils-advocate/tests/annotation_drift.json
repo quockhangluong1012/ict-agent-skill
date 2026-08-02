@@ -1,0 +1,10 @@
+{
+  "_fixture": "The drawn box is 2 points wide on each side of the actual gap, and the entry falls inside the box but outside the real gap. Expect ANN-DRIFT and ANN-ENTRY-FLIP: the 'entered at the FVG' claim is decided entirely by the drawing error.",
+  "instrument": "NDX",
+  "direction": "long",
+  "annotations": [
+    { "label": "H1 FVG box", "drawn_high": 21640.0, "drawn_low": 21600.0,
+      "candle_high": 21638.0, "candle_low": 21602.0 }
+  ],
+  "trade": { "entry": 21601.0 }
+}

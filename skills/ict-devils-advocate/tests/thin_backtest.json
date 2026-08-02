@@ -1,0 +1,12 @@
+{
+  "_fixture": "12/20 with only 7 distinct days on one instrument. The tally is stated correctly, so 0 contradictions — the finding is that the 95% interval swallows 50%, which makes any claim about the edge a [METHOD] failure regardless of how carefully each setup was read.",
+  "instrument": "NDX",
+  "backtest": {
+    "setups": 20,
+    "wins": 12,
+    "claimed_win_rate_pct": 60.0,
+    "distinct_days": 7,
+    "distinct_htf_legs": 4,
+    "instruments": ["NDX"]
+  }
+}

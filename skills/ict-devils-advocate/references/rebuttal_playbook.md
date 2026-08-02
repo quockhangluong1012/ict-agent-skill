@@ -5,19 +5,39 @@
 Do not load all of it. It is a checklist against omission, not a menu to fill — an objection is worth
 making because you found it on the chart, never because it appears here.
 
-- **Always read** Part 2 (cross-cutting failures) and Part 3 (the user's recurring errors). Both are
-  short and both catch things that are invisible from a single step's perspective.
+The file is organised by **attack layer**, deepest first, because that is the order the attack should be
+run in. Layer 3 findings change what is worth saying about layers 2 and 1; the reverse is not true.
+
+| Layer | Question | Part | Tier it usually produces |
+|---|---|---|---|
+| 3 — procedure | Would this process have produced a different answer on a different chart? | **Part 0** | `[METHOD]` |
+| 2 — inference | Granting the claims, do they support the conclusion? | **Part 2** | `[METHOD]`, `[HINDSIGHT]` |
+| 1 — claims | Does each stated fact hold against the chart? | **Part 1** | `[CHART]`, `[DOCTRINE]`, `[ARITHMETIC]` |
+
+- **Always read Part 0 and Part 2** — they are short, they are the deep layers, and they catch what is
+  structurally invisible from a step-by-step review. Then **Part 3** (this user's recurring errors).
 - **Read the Part 1 sections for the steps actually in play.** If the analysis makes no OTE claim, skip
   step 6.
+- **Read Part 0.8 whenever the input is a batch of setups** — in `BACKTEST` mode it is the main event and
+  the per-step material is secondary.
 - **Read Part 4** before writing the opposite case, **Part 5** if numbers or risk are stated, and
-  **Part 6** if your objection list has grown past about six items.
+  **Part 6 always, before shipping** — it is the filter that decides what survives into the output.
 
-The `[METHOD]` tier maps almost entirely to Part 2; `[DOCTRINE]` maps to the **Standard** paragraph of
-each Part 1 section.
+`[DOCTRINE]` maps to the **Standard** paragraph of each Part 1 section; prefer citing
+`../../ict-doctrine/references/doctrine.md` by anchor over restating a definition here.
 
 ## Contents
 
-- [How to use this file](#how-to-use-this-file)
+- [How to read the Part 1 entries](#how-to-read-the-part-1-entries)
+- [Part 0 — Attacks on the procedure](#part-0--attacks-on-the-procedure)
+  - [0.1 The counterfactual chart test](#01-the-counterfactual-chart-test)
+  - [0.2 Free-parameter audit](#02-free-parameter-audit)
+  - [0.3 Order of discovery](#03-order-of-discovery)
+  - [0.4 Rule provenance, and the user's own checklist](#04-rule-provenance-and-the-users-own-checklist)
+  - [0.5 The symmetry test](#05-the-symmetry-test)
+  - [0.6 The unmentioned alternative](#06-the-unmentioned-alternative)
+  - [0.7 Confidence–evidence mismatch](#07-confidenceevidence-mismatch)
+  - [0.8 Cross-setup battery — BACKTEST mode](#08-cross-setup-battery--backtest-mode)
 - [Part 1 — Attack vectors by model step](#part-1--attack-vectors-by-model-step)
   - [Step 1 — HTF PD array / bias](#step-1--htf-pd-array--bias)
   - [Step 2 — Liquidity run](#step-2--liquidity-run)
@@ -31,13 +51,16 @@ each Part 1 section.
 - [Part 3 — This user's documented recurring errors](#part-3--this-users-documented-recurring-errors)
 - [Part 4 — Inversion toolkit](#part-4--inversion-toolkit)
 - [Part 5 — Risk and prop-firm rule attacks](#part-5--risk-and-prop-firm-rule-attacks)
-- [Part 6 — Objections not worth making](#part-6--objections-not-worth-making)
+- [Part 6 — The objection filter](#part-6--the-objection-filter)
+  - [The three tests](#the-three-tests)
+  - [Objections that fail the filter by construction](#objections-that-fail-the-filter-by-construction)
+  - [The one thing worth over-reporting](#the-one-thing-worth-over-reporting)
 
 ---
 
-## How to use this file
+## How to read the Part 1 entries
 
-Each step below gives five things: the **standard** the claim has to meet, the **attack vectors**
+Each Part 1 step gives five things: the **standard** the claim has to meet, the **attack vectors**
 ranked roughly by how often they land, the **self-deception** that usually produces the error, the
 **forcing question**, and **what discharges** the objection. The discharge condition is not optional —
 an objection the user cannot possibly answer is a rhetorical move, not an argument.
@@ -45,6 +68,267 @@ an objection the user cannot possibly answer is a rhetorical move, not an argume
 The standards here are the ICT 2022 Model's own definitions, which makes them fair `[DOCTRINE]`
 ammunition. The chart-specific facts are not here and never will be; those you must read off the
 screenshots the user actually gave you.
+
+---
+
+## Part 0 — Attacks on the procedure
+
+Part 1 asks whether each claim is true. Part 2 asks whether the claims support the conclusion. Part 0
+asks a question neither of them can reach: **would this procedure have produced a different answer on a
+different chart?** If not, then every individual claim can be perfectly correct and the analysis still
+carries no information — the steps were narration attached to a conclusion that was never at risk.
+
+This is the deepest layer available and the one a step-by-step review structurally cannot see, because
+each step examined alone always looks like it is doing work. It is also the layer where overreach is
+easiest, so the rule is unusually strict here: **a Part 0 objection ships only with a named,
+chart-specific instance.** "Your process is unfalsifiable" asserted in the abstract is contrarianism.
+"Your process is unfalsifiable, and here is the specific condition it lacks" is a `fatal` finding.
+
+Every objection in this part is `[METHOD]` unless it can be pinned to something visible, in which case
+prefer the harder tier — an unmentioned competing FVG you can point at is `[CHART]`, not `[METHOD]`.
+
+### 0.1 The counterfactual chart test
+
+**The probe.** What is the smallest change to this chart that would have made the analysis say *no
+trade*? Name the candle and the price.
+
+**Why it is the first thing to run.** An analysis that survives every possible chart is not an analysis.
+The ICT 2022 Model is a *filter* — its whole value is the setups it rejects — so a read with no rejection
+condition has used the model's vocabulary while discarding its function. And this failure is invisible
+step by step: each of the eight steps can be individually defensible while the conjunction rejects
+nothing.
+
+**How to run it concretely.** Take the analysis's own supporting factors one at a time and ask what value
+each would have had to take to flip the conclusion. If the sweep had been two ticks shallower — still no
+trade? If the displacement bodies had been half the size? If the setup had fallen twenty minutes later,
+outside the killzone? Where the honest answer is "the read would have been the same", that factor was not
+a criterion, it was decoration, and it should not be counted as support in section 2.
+
+**The three shapes this failure takes.**
+
+1. **No stated invalidation.** The analysis says what it expects but not what would refute it.
+2. **Invalidation that cannot be observed before the outcome.** "I'd be wrong if it went to my stop" is
+   the outcome, not a condition — it can only be evaluated after the question is already settled.
+3. **Elastic criteria.** Every factor is qualitative enough to be satisfied at any value it took.
+   Displacement "energetic", MSS "significant", FVG "clean" — with no threshold, none of them can fail.
+
+**Forcing question.** "Name the candle and price that would have made you skip this. If you cannot, tell
+me which of your eight steps could have come out no on this chart."
+
+**Discharged by.** A pre-registered condition, decidable at the hard right edge, that the chart could
+plausibly have violated — ideally timestamped before the entry.
+
+**Severity.** `fatal` in `LIVE` mode, where it is the single most valuable thing this skill can produce.
+`material` in `REVIEW`, where a missing invalidation is diagnosis rather than a live problem — unless the
+analysis is being used to justify repeating the process, which it usually is.
+
+---
+
+### 0.2 Free-parameter audit
+
+**The probe.** Count the choices the read made *on* the chart rather than *before* it.
+
+An ICT 2022 read consumes roughly nine degrees of freedom:
+
+| # | Free parameter | Fixed in advance by a written rule? |
+|---|---|---|
+| 1 | Which timeframe carries the bias | |
+| 2 | Which two swings bound the dealing range | |
+| 3 | Which pool counts as the liquidity taken | |
+| 4 | Which leg counts as displacement | |
+| 5 | Which of the arrays at the entry is *the* POI | |
+| 6 | Which swing counts as structurally significant for the MSS | |
+| 7 | Which leg the OTE is measured from | |
+| 8 | Which pool is the DOL | |
+| 9 | Which clock, and therefore which killzone | |
+
+**The argument.** A parameter fixed by a written rule before the chart is a *constraint* — it can conflict
+with the chart, so it carries information. A parameter chosen while looking at the chart is a *fitted*
+parameter — it cannot conflict with anything, because it was selected to fit. A read with eight fitted
+parameters and one observation is a curve fit with a sample size of one, and its coherence is guaranteed
+rather than evidential.
+
+This reframes several Part 1 attacks as instances of one failure. "The dealing range boundaries were
+chosen, not derived" is parameter 2 fitted. "Retrospective swing selection" is parameter 6 fitted. "POI
+shopping" is parameter 5 fitted. Naming the pattern is worth more than listing the instances, because the
+fix is one rule-writing exercise rather than six corrections.
+
+**How to state it.** Fill the table for the analysis in front of you and report the ratio: *"7 of 9
+parameters were selected on the chart. Two were rule-fixed: the D1→H1→M5 ordering and the body-close
+requirement for MSS — and the second was then not applied (O4)."* The number is the objection; the table
+is the evidence.
+
+**Discharged by.** Written rules, predating this chart, that fix the parameters — plus evidence they were
+applied here rather than merely owned. A checklist that exists but was not followed is a worse finding
+than no checklist, not a better one; see 0.4.
+
+**Watch for the mirror failure.** Not every fitted parameter is illegitimate — discretion is the point of
+a discretionary model, and demanding nine mechanical rules would be demanding a different strategy. The
+objection is not "you used judgment". It is "you used judgment at nine points and then reported the
+result with the confidence of a mechanical system", or "you used judgment at the one point where you *do*
+have a written rule". Keep it to that.
+
+---
+
+### 0.3 Order of discovery
+
+**The probe.** In what order were the conclusions actually reached, and does the writeup's order match?
+
+Analyses are written deductively — bias, then range, then sweep, then entry — and generated abductively:
+a direction is felt, and the supporting structure is assembled backwards from it. When those two orders
+differ, the writeup is a reconstruction, and every "therefore" in it is load-bearing for nothing.
+
+**Tells, all observable in the text.**
+
+- The bias is stated before the range that supposedly produced it, with the range introduced as
+  confirmation rather than as premise.
+- Boundary swings are unusual, and unusual in exactly the direction that makes the setup work. Run
+  `check_arithmetic.py --sensitivity` to show how far the alternative boundary was and what it does to the
+  premium/discount conclusion — an alternative that is both nearby and conclusion-flipping is strong
+  evidence the choice was doing work.
+- Every factor mentioned supports the conclusion. Real chart reading produces mixed evidence; a writeup
+  with a 100% support rate has been filtered, and the filter is the finding.
+- The target is stated with more precision than the entry logic justifies, which usually means the R
+  figure was needed first.
+
+**Forcing question.** "What did you look at first on this chart, and what was your read before you drew
+the dealing range?"
+
+**Discharged by.** A pre-trade note, timestamped, showing the same order as the writeup. Absent that, the
+honest tier is `[UNSUPPORTED]` rather than `[METHOD]` — you are alleging a process you cannot observe, and
+the discipline that makes this skill worth anything requires saying so.
+
+---
+
+### 0.4 Rule provenance, and the user's own checklist
+
+**The probe.** For each rule the analysis invokes, where is it written down?
+
+This yields two attacks that are stronger than anything in Part 1, because they need no doctrinal
+argument at all — the standard is the user's own.
+
+1. **Rules invented for this chart.** A standard that appears in this analysis and nowhere in the user's
+   written process was probably reverse-engineered from what the chart offered. Ask which document it is
+   in.
+2. **Written rules that were skipped here.** If the user's checklist requires a body close for MSS and
+   this analysis accepts a wick, the objection is not `[DOCTRINE]`, it is `[SELF-CONTRADICTION]` against
+   their own process — and it is far harder to argue with, because it does not depend on agreeing about
+   what ICT meant. This is the highest-yield attack available whenever a written checklist exists, and it
+   is routinely missed because the checklist is not in front of you unless you ask.
+
+**Ask for the checklist once, early, if it is not supplied.** One line: *"Bạn có file checklist/rule đã
+viết trước không? Nếu có, phần lớn phản biện mạnh nhất sẽ đến từ chỗ phân tích này lệch khỏi rule của
+chính bạn, chứ không phải từ doctrine."*
+
+**Discharged by.** The written rule, plus its application here.
+
+---
+
+### 0.5 The symmetry test
+
+**The probe.** Would the same procedure, applied to the same chart with the bias inverted, have produced
+an equally confident opposite read?
+
+Run it mechanically: take each factor the analysis cites as support, and ask whether an equivalent factor
+exists in the opposite direction on the same chart. An FVG below and an FVG above. A pool above and a pool
+below. A killzone that is equally a killzone for a short. Where the supporting factors are symmetric, they
+are not evidence for the direction — they are evidence that PD arrays exist, which was never in dispute.
+
+**This is only shippable as an objection when you can point at the mirror factor.** "There is presumably
+an opposing array" is speculation. "You cite the H1 FVG at 21,602–21,638 as support; the same chart shows
+an unmitigated H1 FVG at 21,710–21,744 on the other side, which the analysis does not mention" is
+`[CHART]` and it is devastating. Without a nameable mirror factor, the symmetry test is a question for the
+user, not an objection — put it in `Hypotheses to check`.
+
+**Discharged by.** An asymmetry: a factor that exists on one side and demonstrably not the other.
+
+---
+
+### 0.6 The unmentioned alternative
+
+**The probe.** What is equally visible on the supplied charts and absent from the writeup?
+
+Silence is the most reliable tell of confirmation-driven reading, and unlike most Part 0 material it is
+directly evidenced: the fact is on the screenshot the user chose to send. Scan for the competing array,
+the untaken pool on the wrong side, the higher-timeframe candle that disagrees, the prior sweep that
+already consumed the target.
+
+The worked example's O3 is exactly this shape — a wick on the user's own D1 screenshot that their
+narrative walked past — and it is one of the two objections that break the thesis there.
+
+**Distinguish two cases, because they warrant different severity.** The user *considered and rejected* the
+alternative but did not write it down (documentation gap, `minor`); or the user did not see it (the read
+was not a survey of the chart, it was a search for a setup — `material` at least, and it undermines the
+`[CHART]` support elsewhere in the analysis).
+
+**Forcing question.** "Bạn có thấy X trước khi vào lệnh không? Nếu có thì vì sao loại; nếu không thì phần
+đọc chart này chưa phải là đọc toàn bộ chart."
+
+**Discharged by.** An account of the alternative and a reason it was rejected.
+
+---
+
+### 0.7 Confidence–evidence mismatch
+
+**The probe.** Compare the certainty of the language to the tier of the evidence underneath it.
+
+"MSS confirmed", "clearly bullish", "chắc chắn", "definitely" attached to a claim that is one reading among
+several is a calibration failure, and calibration is the thing a backtesting phase exists to build. This
+is a small objection about any single sentence and a `material` one about the analysis as a whole: a
+writeup with no hedges anywhere has either found unusually clean evidence or is not tracking its own
+uncertainty, and the evidence base usually tells you which.
+
+Report it as a count rather than a complaint: *"Bốn claim dùng ngôn ngữ chắc chắn ('confirmed',
+'clearly'); theo evidence base thì hai trong số đó là `[UNSUPPORTED]`."* A count is checkable; "you sound
+overconfident" is not.
+
+**Discharged by.** Nothing to discharge — this one is retracted by restating the claims at the confidence
+the evidence supports, which is also the fix.
+
+---
+
+### 0.8 Cross-setup battery — BACKTEST mode
+
+When the input is several setups, the strongest objections are almost never inside any one of them. They
+live in the relationships between setups, they are invisible from a per-setup review, and nobody finds
+them by accident. **Run this battery before attacking any individual setup, and lead the output with what
+it finds.**
+
+1. **Rule drift.** Tabulate one row per setup and one column per free parameter from 0.2 — how the dealing
+   range was bounded, what the MSS standard was, whether entry was CE or proximal edge, whether killzone
+   was required. Any column that is not constant is a rule that changed mid-sample. This is the single
+   highest-yield backtest objection: a strategy whose rules varied across the sample was not tested, and
+   its aggregate win rate measures nothing, because no fixed procedure produced it.
+2. **Selection provenance.** How were these setups found? Scrolling back until something that looks like a
+   setup appears is search-then-label, not sampling — the criteria are being applied to a population that
+   was already filtered by resemblance to a good setup. The clean method is to fix a date range in advance
+   and take every instance.
+3. **Survivorship.** How many setups met the criteria and were *not* logged? If the answer is unknown, the
+   win rate is `[UNSUPPORTED]` and no amount of per-setup rigour repairs it.
+4. **Outcome-conditioned labelling.** Compare the "valid setup" rate among winners against losers. If
+   setups are labelled valid more often when they won, the outcome participated in the labelling — which
+   is `[HINDSIGHT]` operating at the sample level and it inflates every downstream number.
+5. **Regime concentration.** One instrument, one month, one volatility regime, one direction. Twenty
+   setups from a single trending month is closer to one observation than twenty.
+6. **Non-independence.** Setups from the same session, or off the same HTF leg, are not independent
+   draws. Count distinct days and distinct HTF legs alongside the raw count; the smaller number is the
+   real sample size.
+7. **Variance illiteracy.** Run `check_arithmetic.py` with a `backtest` block for the Wilson interval.
+   Twelve wins in twenty is a 95% interval of roughly 39–79% — an observation compatible with a coin and
+   with a strong edge simultaneously. Conclusions drawn from a point estimate inside an interval that wide
+   are `[METHOD]` failures regardless of how carefully each setup was read.
+8. **Criteria mutation between samples.** Entry rules adjusted after seeing the first batch, then applied
+   to the second, with results pooled. The pooled number describes no strategy that ever existed.
+
+**Rationing per-setup depth.** After the battery, give full treatment to at most three setups — the two
+that carry the most weight in the user's conclusion and the one that most clearly contradicts it — and one
+line each for the rest. A twenty-setup review with twenty full objection lists is unreadable, and its
+length hides the cross-setup findings that were the point.
+
+**Discharged by.** Per item: the rule table with constant columns (1); a pre-fixed date range (2); a log
+including non-taken qualifying setups (3); comparable valid-rates across outcomes (4); a spread of
+instruments and regimes (5); a distinct-day count close to the setup count (6); an interval narrow enough
+to exclude the null (7); separate reporting of the two samples (8).
 
 ---
 
@@ -341,22 +625,28 @@ accounted for.
 
 ## Part 2 — Cross-cutting epistemic failures
 
-**Hindsight contamination.** The dominant failure in chart review. The test is mechanical: cover
+Layer 2: granting the claims, do they support the conclusion? Several entries here are the *symptom* of a
+Part 0 procedural failure — where that is so, it is noted, and the deeper objection is the one to ship.
+Reporting both is double-counting.
+
+**Hindsight contamination.** The dominant failure in `REVIEW` and `BACKTEST` mode. The test is mechanical: cover
 everything to the right of the decision candle. Would the boxes be drawn in the same places? Would that
 swing have been marked as significant? Would that wick have been called a sweep? Anything that survives
 only with the right side visible is `[HINDSIGHT]` and cannot support the analysis. Note the asymmetry —
 this cuts against your own objections too. An objection that only works because you can see what
-happened next is equally illegitimate; label it or drop it.
+happened next is equally illegitimate; label it or drop it. In `LIVE` mode this section is nearly
+inapplicable to the user and applies mainly to you.
 
 **POI shopping.** With enough PD array types available — FVG, OB, breaker, mitigation block, rejection
 block, BPR, inversion FVG, opening gaps — some array can be found near almost any price. The existence
 of an array at the entry is therefore weak evidence on its own. The question is whether the array was
 identifiable and *selected* before price arrived, and whether a competing array pointing the other way
-was equally present and simply not mentioned.
+was equally present and simply not mentioned. *This is free parameter 5 in 0.2, and the unmentioned
+competing array is 0.6 — if you can name that array, ship the `[CHART]` objection there instead.*
 
 **Timeframe shopping.** If the D1 read is inconvenient, the analysis quietly becomes an H1 read; if H1
 is inconvenient, an M5 read. The workflow's authority ordering (D1 → H1 → M5) exists to prevent exactly
-this. Watch for the load-bearing timeframe changing mid-analysis.
+this. Watch for the load-bearing timeframe changing mid-analysis. *Free parameter 1.*
 
 **The unfalsifiability problem.** Discretionary ICT reads have enough degrees of freedom — which range,
 which swing, which array, which timeframe, fresh vs. inverted — that a competent practitioner can
@@ -365,15 +655,18 @@ is worthless; it is an argument that a narrative's coherence is nearly zero evid
 The only thing that distinguishes skill from storytelling is whether the read was **stated in advance
 with conditions that could have failed**. When an analysis contains no such condition, the strongest
 available objection is often not about any individual step but about this: nothing here could have come
-out wrong, so nothing here has been tested.
+out wrong, so nothing here has been tested. *Run it as 0.1 rather than asserting it here — the
+counterfactual test is what converts this from a philosophical complaint into a named missing condition.*
 
 **Curve-fitted backtests.** Boxes drawn to fit a run that is already visible; only winning setups
 counted; entry criteria adjusted between samples; the sample drawn from one instrument in one regime.
 Ask: how many setups met the criteria and did *not* work, and were they logged with the same diligence?
+*Full battery at 0.8.*
 
 **Sample size illiteracy.** Three or four instances support essentially no conclusion about a
 discretionary edge. If the analysis generalizes ("this always works when…") from a handful of examples,
-that inference is the finding, independent of whether the individual reads were right.
+that inference is the finding, independent of whether the individual reads were right. Give the interval
+rather than the adjective: the `backtest` block of `check_arithmetic.py` computes it.
 
 **Outcome-as-evidence.** "It worked" says nothing about whether the process was sound; the model's own
 standards are defined on the setup, not the result. A stale FVG was stale whether or not price respected
@@ -475,7 +768,36 @@ rulebook rather than trusted from memory. What does not change is the *class* of
 
 ---
 
-## Part 6 — Objections not worth making
+## Part 6 — The objection filter
+
+Read this before shipping, every time. Objections are not free: each one costs the user time to check,
+and a list padded with weak entries trains them to skim the strong ones. Cutting is not softening — a
+five-objection response where all five land is a harder attack than a fifteen-objection response where
+ten are noise, because the user acts on the first and discounts the second.
+
+### The three tests
+
+Apply all three to every drafted objection.
+
+1. **Discharge test.** Name the specific, obtainable evidence that would retract it. If the user cannot
+   possibly answer it, it is rhetoric, not an argument. **Delete.**
+2. **Consequence test.** State in one clause what changes in the conclusion if you are right. Cannot
+   state it → **delete**. States something the conclusion survives unchanged → it is `minor`, and the
+   `minor` budget is three for the whole response.
+3. **Rebuttal test.** Write the best single-sentence answer the user could give *from evidence already in
+   your inventory*. Then judge it honestly:
+   - The answer defeats the objection → **delete it and do not ship it.** You have just done their
+     checking for them; making them repeat it is a tax on their attention and a hit to your credibility.
+   - The answer wounds it → ship it with the answer pre-empted in the `Your best answer:` line. This is
+     strictly stronger than making them find the answer themselves and then wondering whether you missed
+     it or hid it.
+   - No answer exists from the available evidence → this is your strongest material. Lead with it.
+
+Report the outcome in one line at the end of section 3: *"Draft 11 objection, cắt 4 (2 không nêu được
+consequence, 2 bị chính evidence base của bạn bác)."* A critique that cuts nothing did not run the filter,
+and saying so is itself information about how much the surviving objections are worth.
+
+### Objections that fail the filter by construction
 
 These consume space, dilute the credible objections, and train the user to discount you.
 
@@ -492,3 +814,15 @@ These consume space, dilute the credible objections, and train the user to disco
 - **Piling on after the load-bearing claim is already broken.** Once step 1's range is shown to be
   wrong, cataloguing downstream errors that all inherit from it adds no information. Say once that they
   inherit, and stop.
+- **Reporting a Part 2 symptom and its Part 0 cause as two objections.** "POI shopping" and "free
+  parameter 5 was fitted" are one finding. Ship the deeper one.
+- **Abstract procedure complaints.** A Part 0 objection with no named chart-specific instance fails the
+  discharge test automatically — there is nothing the user could produce to retract it. Either find the
+  instance or move it to `Hypotheses to check`.
+
+### The one thing worth over-reporting
+
+Risk-rule and position-sizing breaches, and any arithmetic contradiction. These are cheap for the user to
+verify, impossible to argue with, and independently capable of ending an evaluation account. They are
+exempt from the severity budget: report every one you find, compressed to a line each if there are
+several.
