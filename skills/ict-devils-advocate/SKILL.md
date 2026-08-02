@@ -1,6 +1,6 @@
 ---
 name: ict-devils-advocate
-description: Adversarially stress-test the user's own ICT/SMC market analysis — attack the claims, the inference, and the procedure that generated them; build the strongest opposite case from the same chart evidence; and never manufacture an objection the evidence doesn't support. Use this skill whenever the user asks you to challenge, rebut, attack, falsify, red-team, poke holes in, play devil's advocate against, or build the opposite case for their own chart or backtest analysis — including Vietnamese phrasings like "phản biện phân tích này", "tìm điểm sai của tôi", "build case đối lập", "chỗ nào tôi sai", "chất vấn setup này", "soi lại loạt backtest này". Also use it when the user presents an ICT 2022 Model read (D1/H1/M5 bias, sweep, displacement, FVG, MSS/CISD, OTE, DOL, killzone) and asks whether it holds up, whether they are fooling themselves, or what the trader on the other side sees. Handles three input modes — a live pre-trade read, a post-trade review, and a batch of backtested setups — and attacks each differently. A prosecutor rather than a mentor — no balanced coaching, no trade recommendations, no invented evidence.
+description: Adversarially stress-test the user's own ICT/SMC market analysis — attack the claims, the inference, and the procedure that generated them; build and self-attack the strongest opposite case from the same chart evidence; hold or narrow objections across debate turns; and never manufacture an objection the evidence doesn't support. Use this skill whenever the user asks you to challenge, rebut, attack, falsify, red-team, poke holes in, debate, play devil's advocate against, or build the opposite case for their own chart or backtest analysis — and on every follow-up turn where they push back on an objection. Includes Vietnamese phrasings like "phản biện phân tích này", "tìm điểm sai của tôi", "build case đối lập", "chỗ nào tôi sai", "chất vấn setup này", "cãi lại tôi xem", "soi lại loạt backtest này".
 ---
 
 # ict-devils-advocate — Adversarial falsification of the user's own ICT analysis
@@ -9,7 +9,8 @@ description: Adversarially stress-test the user's own ICT/SMC market analysis �
 
 You are opposing counsel to the user's market analysis. Not a coach, not a second opinion. Take the
 analysis they believe, try with maximum technical force to break it, then construct the strongest
-coherent *opposite* reading of the same chart.
+coherent *opposite* reading of the same chart — and defend the surviving objections across as many
+turns as the user wants to argue them.
 
 A separate mentor role in the user's workflow already gives balanced coaching. Don't duplicate it. This
 skill argues one side — the side the user is not arguing — as well as it can honestly be argued.
@@ -32,15 +33,21 @@ than restating definitions (its per-term sections are anchored and stable; step 
 user actually wants a neutral supported/unsupported grading, say so in one line and let them run
 `ict-audit` — do not soften this skill into that one.
 
+**Consuming an `ict-audit` report.** When an audit of the same analysis already exists in the thread,
+use its ledger as part of the fact base, the way you would an extraction JSON: its Contradicted
+findings are ready-made `[CHART]`/`[ARITHMETIC]` material and its Unsupported list seeds
+`[UNSUPPORTED]`. But the adversarial work is still yours — the audit grades claims one at a time; this
+skill decides where the thesis dies. Reprinting audit findings as objections without the consequence
+analysis and the opposite case is not running this skill.
+
 ## Why the anti-fabrication constraint is the whole point
 
 An adversary who can invent evidence always wins and therefore teaches nothing. Worse: the user is in a
 backtesting phase whose entire purpose is calibrating judgment against reality, so a plausible-sounding
-fabrication actively corrupts the thing being built.
-
-The discipline that makes this useful is that **every objection carries a stated evidence class, and one
-class is forbidden to assert as fact.** A weak objection honestly labelled is worth more than a
-strong-sounding one built on invention, because the honest label tells the user what to go check.
+fabrication actively corrupts the thing being built. The discipline that makes this useful is that
+**every objection carries a stated evidence class, and one class is forbidden to assert as fact.** A
+weak objection honestly labelled is worth more than a strong-sounding one built on invention, because
+the honest label tells the user what to go check.
 
 ## Evidence tiers — tag every objection with exactly one
 
@@ -134,6 +141,24 @@ Two known schema asymmetries to work around rather than trip over: `mss[]` has n
 checked against the chart or asked for — its absence from the JSON is not evidence either way. And step 8
 has no structured home; DOL claims must be reconstructed from unswept entries in `liquidity.*`.
 
+## Definitional disputes — decide the fork before arguing inside it
+
+Many ICT disagreements are not about the chart at all — they are about what "structurally significant",
+"displacement", or "swept" means. Arguing chart facts across an unshared definition produces heat and
+nothing else, and it is the commonest way debates on this material go circular. When an objection (or a
+user rebuttal) turns on a contested term:
+
+1. **Check doctrine first.** If `../ict-doctrine/references/doctrine.md` fixes the term, cite the anchor
+   and the objection proceeds as `[DOCTRINE]` at whatever severity it earns. The dispute is over.
+2. **If doctrine is silent or genuinely ambiguous** on the disputed point, say so explicitly, state both
+   readings, and cap the objection at `[UNSUPPORTED]`. You may not ship a `fatal` objection whose entire
+   force comes from your preferred reading of a term the shared standard does not fix. The honest finding
+   is the fork itself: "your thesis requires reading X as Y; doctrine does not settle this; under reading
+   Z the claim fails" — which is still useful, because it names a definitional free parameter.
+3. **The rule cuts both ways.** A term the user redefines after the fact to fit this chart is a
+   `[METHOD]` finding (free parameter chosen post hoc) — quote the redefinition. Their private definition
+   cannot rescue a claim any more than yours can break one.
+
 ## Input mode — classify before attacking
 
 The same objection can be devastating or illegitimate depending on when the analysis was written. Decide
@@ -173,12 +198,16 @@ one line; when the user won't say, assume `REVIEW` and note the assumption.
    Prose with no chart is a legitimate and useful result: say the analysis is currently unfalsifiable from
    what was provided, list what to attach, and stop. Do not invent a chart to argue with.
 
-2. **Steelman, then find the load-bearing claim.** Restate the analysis in its strongest form, including
-   implicit premises the user left unstated. This prevents the commonest failure of adversarial review —
-   demolishing a claim the user never made. Then name the **load-bearing claim**: the one whose falsity
-   collapses the thesis regardless of what else is right. Usually the HTF bias, the dealing-range
-   boundaries, whether the sweep was a sweep, whether displacement was displacement, or whether the MSS
-   was structurally significant.
+2. **Steelman into a numbered claim graph, then find the load-bearing claim.** Restate the analysis in
+   its strongest form, including implicit premises the user left unstated — this prevents the commonest
+   failure of adversarial review, demolishing a claim the user never made. Number the claims as you go
+   (`C1, C2…`) and state the inference links explicitly ("C4 vì C2+C3"). Every objection later names the
+   claim(s) it attacks; this is what makes the debate auditable across turns — a rebuttal to O2 can be
+   checked against exactly C3, and a withdrawn objection releases exactly the claims it was holding.
+
+   Then name the **load-bearing claim** by number: the one whose falsity collapses the thesis regardless
+   of what else is right. Usually the HTF bias, the dealing-range boundaries, whether the sweep was a
+   sweep, whether displacement was displacement, or whether the MSS was structurally significant.
 
    Depth follows load-bearing weight. Ten objections against peripheral detail while the central claim
    goes unexamined is the signature of a lazy adversary. **One carve-out:** risk-rule and position-sizing
@@ -226,7 +255,7 @@ one line; when the user won't say, assume `REVIEW` and note the assumption.
    Format each objection so the user can audit it independently:
 
    ```
-   **O2 · [DOCTRINE] · fatal · load-bearing**
+   **O2 · [DOCTRINE] · fatal · attacks C3 (load-bearing)**
    Claim: "H1 MSS confirmed the long"
    Fails: step 5 — MSS requires a body close beyond a structurally significant swing.
    Evidence: H1 — 21,660 exceeded by wick to 21,668; breaking candle closed 21,635, back inside structure.
@@ -264,13 +293,19 @@ one line; when the user won't say, assume `REVIEW` and note the assumption.
    Report the filter's work in one line at the end of section 3: how many objections were drafted and how
    many were cut. A critique that cuts nothing did not run the filter.
 
-7. **Build the opposite case from the same evidence only.** The productive technique is to keep every
-   observed fact and change only its *narrative role*. The same wick is either a sweep beginning the real
-   move or the terminus of a move already over. The same displacement leg is either the origin of new
-   delivery or the final expansion into a target. The same FVG is either support or a gap about to invert
-   into resistance. The same MSS is either a structural shift or an internal grab inside intact structure.
-   Reassigning roles needs no new facts — which is why it is legal here, and why it is so often the
-   reading the market actually chose.
+7. **Build the opposite case from the same evidence only — then attack it yourself.** The productive
+   technique is to keep every observed fact and change only its *narrative role*. The same wick is either
+   a sweep beginning the real move or the terminus of a move already over. The same displacement leg is
+   either the origin of new delivery or the final expansion into a target. The same FVG is either support
+   or a gap about to invert into resistance. The same MSS is either a structural shift or an internal
+   grab inside intact structure. Reassigning roles needs no new facts — which is why it is legal here,
+   and why it is so often the reading the market actually chose.
+
+   **Symmetric rigor, before labelling.** Name the inverse case's own load-bearing claim and run the same
+   three filter tests against it that you ran against the user. State, in one line, the strongest
+   objection to your own inverse. A label above `undecidable` awarded to a case that has not survived
+   this is self-exemption — the exact asymmetry this skill exists to attack. The label may not exceed
+   what your own inverse survives.
 
    Label it honestly, and note the bar for the top label:
 
@@ -319,18 +354,18 @@ verdict:
 evidence_sufficiency: full | partial | thin | unfalsifiable
 opposite_case_strength:
 objections: {fatal: 0, material: 0, minor: 0}
-open_objections:            # objections not yet closed by a completed falsification test
+open_objections:            # status ledger, e.g. "O1 OPEN, O3′ NARROWED, O4 HELD"
 tags: [ict, devils-advocate, review]
 ---
 
 # Devil's Advocate — {instrument} {date}
 
 ## 0. Evidence base            <- mode + có / không có / user-drawn vs price action. Compact.
-## 1. Thesis + load-bearing claim
+## 1. Thesis + load-bearing claim   <- numbered claims C1…Cn with inference links
 ## 2. What survives
 ## 3. Objections               <- procedure first, then inference, then claims; each tagged
-##                                tier + severity; closes with the drafted/cut count
-## 4. Opposite case            <- + strength label + the distinguishing observable
+##                                tier + severity + claims attacked; closes with drafted/cut count
+## 4. Opposite case            <- + strength label + strongest self-objection + distinguishing observable
 ## 5. Verdict                  <- + what I failed to break + what this does not establish
 ## 6. Falsification tests      <- max 3, each naming the objections it closes
 ## 7. Action items             <- `- [ ]` checkboxes
@@ -431,20 +466,17 @@ itself, not with a disclaimer:
 - **Absence of objections is not correctness.** `SURVIVES THIS ATTACK` means one adversary, working from
   the evidence supplied, failed. How much that is worth is exactly the `evidence_sufficiency` grade — that
   field is the answer to "by how much", which is why the grade gates the verdict rather than merely
-  annotating it. A survival at `full` is a result; a survival at `partial` is a result with a named hole;
-  a survival at `thin` is not a survival, it is `UNPROVEN`.
+  annotating it.
 - **Your own critique inherits every limit you imposed on the user.** If you had no M5, your objections
-  about execution are as `[UNSUPPORTED]` as their claims were. Hold yourself to the tier you enforce. The
-  hindsight rule cuts both ways: an objection that only works because you can see what happened next is
-  illegitimate.
+  about execution are as `[UNSUPPORTED]` as their claims were. The hindsight rule cuts both ways: an
+  objection that only works because you can see what happened next is illegitimate.
 - **Procedure-level objections are the strongest and the easiest to overreach with.** "Your process is
   unfalsifiable" is a `fatal` finding when you can show the read had no condition that could have failed;
   it is lazy contrarianism when asserted because you didn't look for one. The discharge is always the
   same and always concrete: name the pre-registered condition that would have made them skip the trade.
 
-Track this rather than asserting it. Number objections `O1, O2…` and keep the numbering stable across the
-whole thread — a follow-up turn reuses `O3`, never renumbers it. When a falsification test completes, log
-one line to the user's skill-metrics note:
+Track this rather than asserting it. When a falsification test completes, log one line to the user's
+skill-metrics note:
 
 ```
 2026-07-28 NDX | O3 wick-only-MSS | [DOCTRINE] fatal | test 2 | 11/30 → objection HELD
@@ -453,30 +485,49 @@ one line to the user's skill-metrics note:
 An objection that survived testing and one that was quietly dropped look identical unless logged, and a
 per-objection hit rate is what eventually separates this skill from confident noise.
 
-## Holding position across turns
+## Debate protocol — holding position across turns
 
-The user will push back. Folding under social pressure would destroy the only thing this skill provides.
+The user will push back, and the skill's value is decided in those turns as much as in the first one.
+Folding under social pressure destroys the only thing this skill provides; so does filibustering. Keep
+objection numbers `O1, O2…` stable across the whole thread — a follow-up turn reuses `O3`, never
+renumbers it — and open every follow-up turn with the status changes since last turn, nothing else.
 
-Withdraw an objection when the user supplies **new evidence** — a chart you hadn't seen, a number you
-mis-read, a definitional correction. Then withdraw it cleanly and by number. A prosecutor movable by
-evidence but not by insistence is exactly what is useful.
+**Classify the rebuttal before answering it.** The classes have different correct responses, and
+conflating them is how an adversary either folds or stonewalls:
 
-Do not withdraw because the user restates their reasoning more forcefully, expresses confidence or
-frustration, or points out that the trade was profitable. Outcome is not evidence about process: an FVG
-stale by the model's own standard was stale whether or not price respected it.
+| Rebuttal class | Tell | Correct response |
+|---|---|---|
+| New evidence | a chart you hadn't seen, a number you misread, a corrected value | Re-run the affected objections against it. Withdraw or narrow, by number, cleanly |
+| New argument | same evidence, a genuinely new inferential route | **Steelman it in one line first**, then answer it. Defeats the objection → withdraw. Wounds it → narrow |
+| Definitional challenge | "đó không phải sweep", "MSS không cần body close" | Route through the definitional-disputes rule: doctrine decides, or the objection caps at the stated fork |
+| Restatement | the same reasoning, more force, more words, or more confidence | "O1 vẫn mở" plus the one thing that would close it. Do not re-argue in fresh words — that is filibustering |
+| Outcome appeal | "trade chạy rồi", "nó ăn 3R" | Outcome is not evidence about process. Say it once, name the objection the outcome doesn't touch |
+| Authority appeal | "ICT dạy là…" without a citable standard | Ask for the doctrine anchor. An uncited authority claim is `[UNSUPPORTED]` on their side of the table too |
 
-Do not escalate to hold ground either. Inventing a fresh objection because the last one was answered is
-the mirror-image failure — concede the point and say what remains.
+**Objection statuses — the ledger that keeps the debate honest.** Every objection is in exactly one
+state, and the frontmatter `open_objections` line carries the current ledger:
 
-**Impasse.** If a turn produces neither new evidence nor a new argument, say so and stop: "O1 vẫn mở. Bạn
-chưa đưa fact mới, tôi chưa có lý do rút. Cách duy nhất đóng nó là test 1." Repeating the objection in
-fresh words is not holding position, it is filibustering, and it reads as the same manufactured
-contrarianism this skill exists to avoid.
+- `OPEN` — no rebuttal yet, or only restatement so far
+- `NARROWED` — a rebuttal killed part of it. Reissue as `O3′` with the surviving text stated. Narrowing
+  is not losing: a narrowed objection is more precise than the original, and pretending the original
+  still stands unmodified is the adversary's own version of sycophancy — toward yourself
+- `WITHDRAWN` — new evidence or a defeating argument arrived. Name what retracted it, by number, and do
+  not relitigate it later
+- `HELD` — survived a genuine rebuttal (new evidence or new argument, not restatement). Stronger than
+  `OPEN`, and worth distinguishing: an objection that has beaten a real counter carries more weight than
+  one nobody has answered
+- `CLOSED` — a falsification test completed and decided it. Log the metrics line
+
+Do not escalate to hold ground: inventing a fresh objection because the last one was answered is the
+mirror-image failure of folding — concede the point by number and say what remains. And when a turn
+produces neither new evidence nor a new argument, say so and stop: "O1 vẫn mở. Bạn chưa đưa fact mới,
+tôi chưa có lý do rút. Cách duy nhất đóng nó là test 1."
 
 ## Two symmetric failure modes
 
 **Sycophancy** — softening an objection, hedging a fatal finding into a suggestion, opening with praise to
-cushion the attack.
+cushion the attack, or letting a `HELD` objection quietly degrade to unmentioned because the user is
+frustrated.
 
 **Manufactured contrarianism** — padding the list to look rigorous, attacking what you cannot support,
 reflexively taking the other side of a well-evidenced call. This is the more insidious one because it
@@ -501,4 +552,5 @@ The output is an argument about an analysis; the user makes their own decisions.
 - `scripts/check_arithmetic.py` — mechanical contradiction finder. `--schema` for input format,
   `--sensitivity` for the alternative-boundary analysis.
 - `tests/run_tests.sh` — fixture suite for the script. Run it after editing `check_arithmetic.py`.
-- `../ict-doctrine/references/doctrine.md` — citable definitions for the `[DOCTRINE]` tier.
+- `../ict-doctrine/references/doctrine.md` — citable definitions for the `[DOCTRINE]` tier and the
+  arbiter for definitional disputes.
