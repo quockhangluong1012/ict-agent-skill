@@ -1,4 +1,4 @@
-# Rebuttal playbook — where ICT 2022 analyses actually break
+# Rebuttal playbook — where ICT/SMC analyses actually break
 
 ## How to read this file
 
@@ -23,8 +23,8 @@ run in. Layer 3 findings change what is worth saying about layers 2 and 1; the r
 - **Read Part 4** before writing the opposite case, **Part 5** if numbers or risk are stated, and
   **Part 6 always, before shipping** — it is the filter that decides what survives into the output.
 
-`[DOCTRINE]` maps to the **Standard** paragraph of each Part 1 section; prefer citing
-`../../ict-doctrine/references/doctrine.md` by anchor over restating a definition here.
+`[DOCTRINE]` maps to the **Standard** paragraph of each Part 1 section below — cite that paragraph
+directly. It is this skill's own citable standard; no external file is needed.
 
 ## Contents
 
@@ -65,9 +65,15 @@ ranked roughly by how often they land, the **self-deception** that usually produ
 **forcing question**, and **what discharges** the objection. The discharge condition is not optional —
 an objection the user cannot possibly answer is a rhetorical move, not an argument.
 
-The standards here are the ICT 2022 Model's own definitions, which makes them fair `[DOCTRINE]`
-ammunition. The chart-specific facts are not here and never will be; those you must read off the
-screenshots the user actually gave you.
+The standards here are ICT/SMC's own definitions, stated once and citable directly, which makes them
+fair `[DOCTRINE]` ammunition. The chart-specific facts are not here and never will be; those you must
+read off whatever the user actually gave you — screenshots, prose, or a structured facts file.
+
+These eight steps are the common shape a directional ICT/SMC read takes, not a mandatory checklist.
+Read the sections for the steps the user's own analysis actually makes claims about; skip the rest. An
+analysis that only argues bias and entry, with no explicit killzone or DOL claim, gets attacked on bias
+and entry — inventing a killzone objection because step 7 exists in this file is manufactured
+contrarianism, not rigor.
 
 ---
 
@@ -154,9 +160,9 @@ shopping" is parameter 5 fitted. Naming the pattern is worth more than listing t
 fix is one rule-writing exercise rather than six corrections.
 
 **How to state it.** Fill the table for the analysis in front of you and report the ratio: *"7 of 9
-parameters were selected on the chart. Two were rule-fixed: the D1→H1→M5 ordering and the body-close
-requirement for MSS — and the second was then not applied (O4)."* The number is the objection; the table
-is the evidence.
+parameters were selected on the chart. Two were rule-fixed: the HTF→LTF timeframe ordering this analysis
+itself declares, and the body-close requirement for MSS — and the second was then not applied (O4)."*
+The number is the objection; the table is the evidence.
 
 **Discharged by.** Written rules, predating this chart, that fix the parameters — plus evidence they were
 applied here rather than merely owned. A checklist that exists but was not followed is a worse finding
@@ -353,8 +359,9 @@ plus which HTF array price is reaching for.
    measuring against a structure the market has already left behind.
 3. **Bias asserted from candle appearance rather than from the range.** "D1 is clearly bullish" with no
    named range is not step 1, it is a vibe. `[UNSUPPORTED]`.
-4. **Timeframe mismatch.** The bias is claimed as D1 but the reasoning cites H1 structure. Then it is an
-   H1 bias and it does not carry HTF authority in a D1 → H1 → M5 workflow.
+4. **Timeframe mismatch.** The bias is claimed as the higher timeframe (e.g. D1) but the reasoning cites
+   the next timeframe down (e.g. H1) structure. Then it is a lower-timeframe bias and it does not carry
+   HTF authority in whatever multi-timeframe ordering the analysis itself declares.
 5. **The named HTF array is not actually unmitigated.** If the D1 FVG being "reached for" was already
    traded through, the draw argument weakens considerably.
 6. **Arithmetic.** Run the premium/discount computation. A stated `discount` that computes to 0.68 of
@@ -526,8 +533,10 @@ not depend on the break having happened.
 ### Step 6 — Entry (FVG / CE / OTE)
 
 **Standard.** A retracement into the FVG (ideally to CE), into the OTE band (0.62–0.79 of the impulse
-leg), or into an order block / breaker. In a D1 → H1 → M5 workflow this is read on M5. If no M5 chart
-exists, step 6 cannot be evaluated at all — an M5-shaped conclusion drawn from H1 data is fabrication.
+leg), or into an order block / breaker. This is read on whichever timeframe the user's own analysis uses
+for execution — call it the LTF, whatever it actually is (M5, M15, H1, or otherwise). If no chart at
+that execution timeframe exists, step 6 cannot be evaluated at all — an execution-shaped conclusion
+drawn only from higher-timeframe data is fabrication.
 
 **Attack vectors.**
 
@@ -547,8 +556,8 @@ exists, step 6 cannot be evaluated at all — an M5-shaped conclusion drawn from
 6. **Confirmation stacking after the fact.** Listing FVG + OB + OTE + breaker all at the same price is
    often one zone counted four times, not four independent confirmations. Ask which are genuinely
    distinct.
-7. **No M5 chart provided.** Then every step-6 claim is `[UNSUPPORTED]` and should be labelled as such
-   rather than argued about.
+7. **No chart at the execution timeframe provided.** Then every step-6 claim is `[UNSUPPORTED]` and
+   should be labelled as such rather than argued about.
 
 **Self-deception.** "I entered at the FVG" is a category that hides enormous variation — edge vs. CE vs.
 far edge, fresh vs. stale, with vs. without HTF agreement. The phrase feels like process compliance
@@ -557,8 +566,8 @@ while concealing whether any of it was.
 **Forcing question.** "Give me your exact entry, the FVG high/low, the CE, the impulse leg swings, and
 the 0.62/0.705/0.79 levels. Which of those does your entry actually sit on?"
 
-**Discharged by.** Numbers that agree, on an M5 chart, with a leg selection defensible independently of
-the entry.
+**Discharged by.** Numbers that agree, on the execution-timeframe chart, with a leg selection defensible
+independently of the entry.
 
 ---
 
@@ -644,9 +653,11 @@ identifiable and *selected* before price arrived, and whether a competing array 
 was equally present and simply not mentioned. *This is free parameter 5 in 0.2, and the unmentioned
 competing array is 0.6 — if you can name that array, ship the `[CHART]` objection there instead.*
 
-**Timeframe shopping.** If the D1 read is inconvenient, the analysis quietly becomes an H1 read; if H1
-is inconvenient, an M5 read. The workflow's authority ordering (D1 → H1 → M5) exists to prevent exactly
-this. Watch for the load-bearing timeframe changing mid-analysis. *Free parameter 1.*
+**Timeframe shopping.** If the higher-timeframe read is inconvenient, the analysis quietly becomes a
+lower-timeframe read; if that one is inconvenient too, it drops another level. The user's own
+higher-timeframe-to-lower-timeframe authority ordering — whatever specific timeframes their analysis
+declares — exists to prevent exactly this. Watch for the load-bearing timeframe changing mid-analysis.
+*Free parameter 1.*
 
 **The unfalsifiability problem.** Discretionary ICT reads have enough degrees of freedom — which range,
 which swing, which array, which timeframe, fresh vs. inverted — that a competent practitioner can
@@ -696,11 +707,16 @@ observable that separates the two readings carries weight.
 
 These are established patterns from prior review, so they warrant a deliberate check on every analysis
 rather than waiting for them to surface. Their presence still has to be demonstrated from the evidence
-in front of you — a documented tendency is a reason to *look*, never a substitute for finding it.
+in front of you — a documented tendency is a reason to *look*, never a substitute for finding it. This
+list is populated by this specific user's own history and is expected to accumulate or change over time
+as new case studies are reviewed — it is not a fixed or universal list, and the timeframe letters below
+(H1, M5) are the pair this user has most often submitted; substitute whatever HTF/execution-timeframe
+pair the current case study actually uses.
 
-1. **Counter-HTF entry without H1 structural validation.** The signature error. An M5 setup is taken
-   against an intact H1 structure, with the M5 MSS treated as sufficient authority. Always run the
-   explicit check: does H1 confirm, contradict, or stay silent? "Silent" is not "confirm".
+1. **Counter-HTF entry without higher-timeframe structural validation.** The signature error. A
+   lower-timeframe setup (commonly M5) is taken against an intact higher-timeframe structure (commonly
+   H1), with the lower-timeframe MSS treated as sufficient authority. Always run the explicit check:
+   does the higher timeframe confirm, contradict, or stay silent? "Silent" is not "confirm".
 2. **Weak FVG reaction after MSS.** Entry at an FVG following an apparent MSS and displacement, followed
    by a shallow reaction that reverses into the stop. Root causes to test individually: low-quality
    displacement, stale or previously tested FVG, proximal-edge entry where CE was the plan, DOL already

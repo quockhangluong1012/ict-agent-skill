@@ -143,8 +143,8 @@ Retracted by: một buyside pool khác còn nguyên ở trên 21,620, kèm lý d
 
 **O4 · `[DOCTRINE]` · material**
 Claim: "MSS H1 confirmed tại 21,660."
-Fails: step 5 — MSS đòi body close vượt swing có ý nghĩa cấu trúc. Xem
-`../../ict-doctrine/references/doctrine.md#mss-market-structure-shift`.
+Fails: step 5 — MSS đòi body close vượt swing có ý nghĩa cấu trúc (xem Standard của Step 5 trong
+`rebuttal_playbook.md`).
 Evidence: `[CHART]` H1 — wick lên 21,668, nến break close **21,635**, quay về trong structure cũ. Thông
 tin này đã có *trước* entry, nên đây là information failure chứ không phải hindsight — tin tốt, vì fixable
 bằng checklist.

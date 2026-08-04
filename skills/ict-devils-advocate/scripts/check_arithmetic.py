@@ -109,8 +109,8 @@ SCHEMA = {
     },
 }
 
-# Matches the premium/discount convention used by the extract-screenshot-data validator
-# and by ict-audit's check_facts.py, so the three tools never disagree on the same numbers.
+# Standard ICT/SMC premium-discount convention: <45% of range = discount, >55% = premium,
+# the band between is equilibrium.
 DISCOUNT_MAX = 0.45
 PREMIUM_MIN = 0.55
 FIB_RATIOS = ("0.5", "0.62", "0.705", "0.79")
